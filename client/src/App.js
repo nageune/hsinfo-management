@@ -1,24 +1,19 @@
 import { Component } from 'react';
 import './App.css';
 import Customer from './components/Customer';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Paper from '@mui/material/Paper';
-import { withStyles } from '@mui/material/styles';
+import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { styled } from '@mui/system';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: '1600px'
-  }
-})
+// Styled 컴포넌트 정의
+const StyledPaper = styled(Paper)({
+  width: "100%",
+  marginTop: "24px",
+  overflow: "auto",
+});
+
+const StyledTable = styled(Table)({
+  minWidth: 1080,
+});
 
 const customers =[
   {
@@ -47,12 +42,10 @@ const customers =[
 }
 ]
 
-class App extends Component {
-  render() {
-    const {classes}=this.props;
+function App () {
     return (
-      <Paper className={classes.root}>
-        <Table className={classes.Table}>
+      <StyledPaper>
+        <StyledTable>
           <TableHead>
             <TableRow>
               <TableCell>번호</TableCell>
@@ -66,11 +59,9 @@ class App extends Component {
           <TableBody>
             {customers.map(c => { return ( <Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/>);})}
           </TableBody>
-        </Table>
-        
-    </Paper>
+        </StyledTable>
+    </StyledPaper>
   );
 }
-}
 
-export default withStyles(styles)(App);
+export default App;

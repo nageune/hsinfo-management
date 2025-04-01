@@ -1,12 +1,16 @@
 {
     "name": "management",
     "version": "1.0.0",
+    "private": true,
     "scripts": {
         "client": "cd client && yarn start",
         "server": "nodemon server.js",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     },
     "dependencies": {
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/material": "^7.0.1",
         "body-parser": "^1.20.3",
         "express": "^4.21.2",
         "nodemon": "^3.1.9"
