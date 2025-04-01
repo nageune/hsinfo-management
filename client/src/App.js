@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Customer from './components/Customer';
-import { Paper, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
-import { styled } from '@mui/system';
+import { Paper, Table, TableHead, TableBody, TableRow, TableCell, CircularProgress } from '@mui/material';
+import { styled, useTheme } from '@mui/system';
 
 // Styled 컴포넌트 정의
 const StyledPaper = styled(Paper)({
@@ -15,8 +15,14 @@ const StyledTable = styled(Table)({
   minWidth: 1080,
 });
 
+const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
+  margin: theme.spacing(2),
+}));
+
 function App () {
   const [customers, setCustomers] = useState("");
+  const [completed, setCompleted] = useState(0);
+  const theme = useTheme();
 
   useEffect(() => {
     const callApi = async () => {
@@ -25,9 +31,19 @@ function App () {
       return body;
     };
 
-    callApi()
-      .then((res) => setCustomers(res))
-      .catch((err) => console.log(err));
+  callApi()
+    .then((res) => setCustomers(res))
+    .catch((err) => console.log(err));
+  
+  const progress = () => {
+    setCompleted((prevCompleted) =>
+        prevCompleted >= 100 ? 0 : prevCompleted + 1
+      );
+    };
+  const timer = setInterval(progress, 20);
+  return() => {
+    clearInterval(timer);    
+  };
   }, []);
 
       return (
@@ -56,7 +72,17 @@ function App () {
                   job={c.job}
                 />
               ))
-            : ""}
+            : (
+              <TableRow>
+                <TableCell colSpan="6" align="center">
+                  <StyledCircularProgress
+                    variant="indeterminate"
+                    value={completed}
+                  />
+                </TableCell>
+              </TableRow>
+            )          
+          }
           </TableBody>
         </StyledTable>
     </StyledPaper>
