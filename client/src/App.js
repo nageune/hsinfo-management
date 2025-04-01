@@ -1,7 +1,7 @@
-import { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Customer from './components/Customer';
-import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { Paper, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import { styled } from '@mui/system';
 
 // Styled 컴포넌트 정의
@@ -15,49 +15,48 @@ const StyledTable = styled(Table)({
   minWidth: 1080,
 });
 
-const customers =[
-  {
-  'id': 1,
-  'image': 'https://www.hsinfo.co.kr/files/attach/images/447/99b983892094b5c6d2fc3736e15da7d1.png',
-  'name': '홍길동동',
-  'birthday': '12345',
-  'gender': '남자',
-  'job': '대학생'
-},
-{
-  'id': 2,
-  'image': 'https://www.hsinfo.co.kr/files/attach/images/447/99b983892094b5c6d2fc3736e15da7d1.png',
-  'name': '고객',
-  'birthday': '1254345',
-  'gender': '여자',
-  'job': '회사원'
-},
-{
-  'id': 3,
-  'image': 'https://www.hsinfo.co.kr/files/attach/images/447/99b983892094b5c6d2fc3736e15da7d1.png',
-  'name': '한신',
-  'birthday': '1234445',
-  'gender': '남자',
-  'job': '대학생'
-}
-]
-
 function App () {
-    return (
+  const [customers, setCustomers] = useState("");
+
+  useEffect(() => {
+    const callApi = async () => {
+      const response = await fetch("/api/customers");
+      const body = await response.json();
+      return body;
+    };
+
+    callApi()
+      .then((res) => setCustomers(res))
+      .catch((err) => console.log(err));
+  }, []);
+
+      return (
       <StyledPaper>
         <StyledTable>
           <TableHead>
             <TableRow>
-              <TableCell>번호</TableCell>
+              <TableCell>No</TableCell>
               <TableCell>이미지</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
-              <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
+              <TableCell>접수일</TableCell>
+              <TableCell>완료일</TableCell>
+              <TableCell>담당자</TableCell>
+              <TableCell>제품명</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map(c => { return ( <Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/>);})}
+          {customers
+            ? customers.map((c) => (
+                <Customer
+                  key={c.id} // map 을 사용하려면 key 라는 속성이 있어야 함(안하면 Console창에 에러가 발생)
+                  id={c.id}
+                  image={c.image}
+                  name={c.name}
+                  birthday={c.birthday}
+                  gender={c.gender}
+                  job={c.job}
+                />
+              ))
+            : ""}
           </TableBody>
         </StyledTable>
     </StyledPaper>
